@@ -1,0 +1,219 @@
+[
+ {
+  "category": "grammar",
+  "expect": "grammar",
+  "must": [
+   "went",
+   "met"
+  ],
+  "text": "Yesterday I go to the gym and I meet a friend."
+ },
+ {
+  "category": "grammar",
+  "expect": "grammar",
+  "must": [
+   "doesn't"
+  ],
+  "text": "My colleague don't like the new design of the dashboard."
+ },
+ {
+  "category": "grammar",
+  "expect": "grammar",
+  "must": [
+   "have been"
+  ],
+  "text": "I am working on this project since three months."
+ },
+ {
+  "category": "grammar",
+  "expect": "grammar",
+  "must": [
+   "advice"
+  ],
+  "text": "Can you give me some advices about how to structure the database?"
+ },
+ {
+  "category": "grammar",
+  "expect": "grammar",
+  "must": [
+   "did"
+  ],
+  "text": "Why you didn't tell me that the build was broken?"
+ },
+ {
+  "category": "grammar",
+  "expect": "grammar",
+  "must": [
+   "works"
+  ],
+  "text": "The script work fine on my machine but it fails on the server."
+ },
+ {
+  "category": "grammar",
+  "expect": "grammar",
+  "must": [
+   "people"
+  ],
+  "text": "There is a lot of peoples waiting for the release."
+ },
+ {
+  "category": "awkward",
+  "expect": "fluency",
+  "must": [
+   "of creating"
+  ],
+  "text": "I'm thinking to create an application for language learning."
+ },
+ {
+  "category": "awkward",
+  "expect": "fluency",
+  "must": [
+   "make"
+  ],
+  "text": "Can you do a decision about which framework we use?"
+ },
+ {
+  "category": "awkward",
+  "expect": "fluency",
+  "must": [
+   "looking forward to"
+  ],
+  "text": "I'm looking forward to hear from you about the proposal."
+ },
+ {
+  "category": "awkward",
+  "expect": "fluency",
+  "must": [
+   "depends on"
+  ],
+  "text": "It depends from how many users we have at launch."
+ },
+ {
+  "category": "correct",
+  "expect": "none",
+  "text": "Okay, now tell me more about plant breeding trial records, because I don't fully get how they're stored."
+ },
+ {
+  "category": "correct",
+  "expect": "none",
+  "text": "So basically I'm gonna refactor the auth flow and then we can ship it tomorrow."
+ },
+ {
+  "category": "correct",
+  "expect": "none",
+  "text": "Can you rewrite this email so it sounds a bit friendlier but still professional?"
+ },
+ {
+  "category": "correct",
+  "expect": "none",
+  "text": "Yeah that makes sense, let's go with the second option."
+ },
+ {
+  "category": "correct",
+  "expect": "none",
+  "text": "And what practical action could improve that kind of data?"
+ },
+ {
+  "category": "correct",
+  "expect": "none",
+  "text": "Tell me more about Basecamp Research, what do they do?"
+ },
+ {
+  "category": "correct",
+  "expect": "none",
+  "text": "I kinda want to try a different approach, if that's okay with you."
+ },
+ {
+  "category": "fillers",
+  "expect": "none",
+  "text": "Um, so, I was thinking, you know, maybe we could, like, move the meeting to Friday."
+ },
+ {
+  "category": "fillers",
+  "expect": "none",
+  "text": "I went to the \u2014 actually I drove to the office this morning."
+ },
+ {
+  "category": "fillers",
+  "expect": "none",
+  "text": "Can you check the, the logs and tell me what's going on?"
+ },
+ {
+  "category": "fillers",
+  "expect": "any",
+  "text": "So the main main main problem problem is that the the API is is is slow."
+ },
+ {
+  "category": "transcription",
+  "expect": "none",
+  "text": "Can you push the changes to get hub and open a pull request?"
+ },
+ {
+  "category": "transcription",
+  "expect": "none",
+  "text": "Their going to deploy the new version tomorrow morning."
+ },
+ {
+  "category": "transcription",
+  "expect": "none",
+  "text": "Please summarize the meeting notes from Tuesday and Sarah's comments"
+ },
+ {
+  "category": "transcription",
+  "expect": "none",
+  "text": "I need to install the pie torch library before running the model."
+ },
+ {
+  "category": "technical",
+  "expect": "none",
+  "text": "Run npm install, then start the Tauri dev server with bun run tauri dev."
+ },
+ {
+  "category": "technical",
+  "expect": "none",
+  "text": "Write a Kubernetes manifest that exposes the Postgres pod on port 5432."
+ },
+ {
+  "category": "technical",
+  "expect": "none",
+  "text": "Use Qwen through Ollama and return structured JSON with a schema."
+ },
+ {
+  "category": "technical",
+  "expect": "none",
+  "text": "Mattia and Giulia are presenting the Handy integration at Hacktoberfest."
+ },
+ {
+  "category": "non-native",
+  "expect": "grammar",
+  "must": [
+   "explain"
+  ],
+  "text": "Can you explain me how this algorithm works?"
+ },
+ {
+  "category": "non-native",
+  "expect": "grammar",
+  "must": [
+   "for"
+  ],
+  "text": "I'm waiting the answer from the client since this morning."
+ },
+ {
+  "category": "non-native",
+  "expect": "grammar",
+  "must": [
+   "am 30",
+   "30 years old"
+  ],
+  "text": "I have 30 years and I work as a designer."
+ },
+ {
+  "category": "non-native",
+  "expect": "grammar",
+  "must": [
+   "information"
+  ],
+  "text": "I need more informations about the pricing model."
+ }
+]

@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gramma</title>
+<style>
+  :root {
+    --bg: #fbfaf8; --card: #ffffff; --text: #1d1d1f; --muted: #6e6e73; --line: #e7e5e1;
+    --grammar: #c2410c; --grammar-bg: #fff1e8; --fluency: #1d4ed8; --fluency-bg: #eaf0ff;
+    --repetition: #6d28d9; --repetition-bg: #f3edff; --ok: #15803d; --accent: #1d1d1f;
+    --local: #15803d; --local-bg: #ecfdf3; --cloud: #1d4ed8; --cloud-bg: #eef3ff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161617; --card: #1f1f21; --text: #f2f2f2; --muted: #9a9aa0; --line: #2e2e31;
+      --grammar: #fb923c; --grammar-bg: #3a2216; --fluency: #8fb0ff; --fluency-bg: #1b2440;
+      --repetition: #c4a6ff; --repetition-bg: #2a2040; --ok: #4ade80; --accent: #f2f2f2;
+      --local: #4ade80; --local-bg: #14281c; --cloud: #8fb0ff; --cloud-bg: #1b2440;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif; }
+  main { max-width: 680px; margin: 0 auto; padding: 24px 16px 64px; }
+  header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  h1 { font-size: 17px; font-weight: 600; margin: 0; flex: 1; }
+  h2 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 32px 0 10px; }
+  .status { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+  .dot.busy { background: var(--fluency); animation: pulse 1s infinite; }
+  .dot.off { background: var(--muted); }
+  .dot.err { background: var(--grammar); }
+  @keyframes pulse { 50% { opacity: .3; } }
+  button { font: inherit; font-size: 13px; border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 8px; padding: 5px 10px; cursor: pointer; }
+  button:hover { border-color: var(--muted); }
+  select { font: inherit; font-size: 12px; border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 6px; padding: 2px 4px; }
+  button.ghost { border: none; background: none; color: var(--muted); padding: 2px 6px; }
+  .try { display: flex; gap: 8px; }
+  .try input { flex: 1; min-width: 0; font: inherit; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--text); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin-bottom: 12px; position: relative; animation: in .25s ease; }
+  @keyframes in { from { opacity: 0; transform: translateY(-4px); } }
+  .card .close { position: absolute; top: 10px; right: 10px; }
+  .original { margin: 0 28px 12px 0; color: var(--muted); }
+  mark { background: none; color: var(--text); border-bottom: 2px solid; padding: 0 1px; }
+  mark.grammar { border-color: var(--grammar); } mark.fluency { border-color: var(--fluency); } mark.repetition { border-color: var(--repetition); }
+  .issue { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; align-items: baseline; margin: 10px 0; }
+  .badge { font-size: 11px; font-weight: 600; border-radius: 6px; padding: 1px 7px; text-transform: uppercase; letter-spacing: .03em; }
+  .badge.grammar { color: var(--grammar); background: var(--grammar-bg); }
+  .badge.fluency { color: var(--fluency); background: var(--fluency-bg); }
+  .badge.repetition { color: var(--repetition); background: var(--repetition-bg); }
+  .fix s { color: var(--muted); } .fix b { font-weight: 600; }
+  .why { grid-column: 2; font-size: 13px; color: var(--muted); }
+  .natural { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); display: flex; gap: 10px; align-items: baseline; }
+  .natural span { flex: 1; }
+  .empty { color: var(--muted); font-size: 14px; padding: 24px 0; text-align: center; }
+  .pattern { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .pattern small { color: var(--muted); }
+  details summary { cursor: pointer; color: var(--muted); font-size: 13px; margin: 32px 0 10px; }
+  .hist { font-size: 14px; padding: 8px 0; border-bottom: 1px solid var(--line); display: flex; gap: 8px; }
+  .hist div { flex: 1; }
+  .hist small { color: var(--muted); display: block; }
+  footer { margin-top: 32px; font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .examples { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 10px 0 4px; }
+  .examples small { color: var(--muted); }
+  .examples button { font-size: 13px; padding: 4px 10px; }
+  .engine { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 8px; }
+  .engine .group { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; opacity: .75; }
+  .engine .group.local { --c: var(--local); --cbg: var(--local-bg); }
+  .engine .group.cloud { --c: var(--cloud); --cbg: var(--cloud-bg); }
+  .engine .group.active { opacity: 1; border: 2px solid var(--c); background: var(--cbg); padding: 11px 15px; }
+  .engine .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+  .engine .head b { font-size: 14px; color: var(--c); }
+  .engine .badge { font-size: 11px; font-weight: 600; color: var(--bg); background: var(--c); border-radius: 999px; padding: 2px 8px; }
+  .engine .note { font-size: 12px; color: var(--muted); margin: 0 0 8px; }
+  .engine .group .pill.on { background: var(--c); border-color: var(--c); color: var(--bg); }
+  .engine .pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pill { border-radius: 999px; padding: 4px 12px; }
+  .pill.on { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+  .privacy { font-size: 12px; color: var(--muted); margin: 0 0 8px 4px; }
+  .meta { font-size: 12px; color: var(--muted); margin-top: 10px; }
+  .meta .where { font-weight: 600; }
+  .meta .where.local { color: var(--local); } .meta .where.cloud { color: var(--cloud); }
+  details.tests { margin-top: 16px; }
+  details.tests > summary { list-style: none; margin: 0 0 10px; }
+  details.tests > summary::-webkit-details-marker { display: none; }
+  details.tests > summary::before { content: "›"; display: inline-block; width: 14px; transition: transform .15s; }
+  details.tests[open] > summary::before { transform: rotate(90deg); }
+  .sub { font-size: 12px; color: var(--muted); margin: 16px 0 4px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Gramma</h1>
+    <span class="status"><span class="dot" id="dot"></span><span id="status">connecting…</span></span>
+    <button id="pause">Pause</button>
+  </header>
+
+  <div class="engine" id="engine"></div>
+
+  <details class="tests">
+    <summary>Test tools</summary>
+    <form class="try" id="try">
+      <input id="tryText" placeholder="Type a sentence to check…" autocomplete="off">
+      <button>Check</button>
+    </form>
+    <div class="examples" id="examples">
+      <small>Examples:</small>
+      <button data-example>So I was talking with the client this morning and they need more informations about the pricing before they can decide anything.</button>
+      <button data-example>My colleague don't like the new design, so we're gonna have a call tomorrow to discuss about the changes.</button>
+      <button data-example>Yesterday I go to the office early because my manager wanted to explain me the new plan for the next quarter.</button>
+      <button data-example>Can you give me some advices about the database? I'm thinking to move everything to Postgres but I'm not sure it's worth it.</button>
+      <button data-example>Honestly it depends from how many users we have, but I think we can handle it without changing the whole architecture.</button>
+    </div>
+    <p class="sub">Handy path</p>
+    <div class="hist"><div><small>Add a fake dictation to Handy's history (removed after 5 s). You should get feedback and the panel.</small></div><button data-handytest>▶ Test Handy path</button></div>
+    <p class="sub">Replay a past Handy dictation</p>
+    <div id="replay"></div>
+  </details>
+
+  <h2>New feedback</h2>
+  <div id="cards"></div>
+
+  <div id="patternsBox" hidden>
+    <h2>Worth practicing</h2>
+    <div id="patterns"></div>
+  </div>
+
+  <h2>History (<span id="histCount">0</span>)</h2>
+  <div id="history"></div>
+
+
+  <footer>
+    <span>Handy text is never changed</span>
+    <button class="ghost" id="clear">Clear history</button>
+  </footer>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+let items = [], paused = false, models = [], model = "";
+const isCloud = (m) => m.includes("/");
+const short = (m) => m.split("/").pop();
+const ago = (t) => { const s = (Date.now() - t) / 1000; return s < 60 ? "just now" : s < 3600 ? `${Math.round(s / 60)} min ago` : s < 86400 ? `${Math.round(s / 3600)} h ago` : new Date(t).toLocaleDateString(); };
+const meta = (f) => [f.model ? `<span class="where ${isCloud(f.model) ? "cloud" : "local"}">${isCloud(f.model) ? "☁ Cloud" : "💻 Local"}</span> · ${esc(short(f.model))}` : "", f.ms ? `${(f.ms / 1000).toFixed(1)} s` : "", ago(f.created_at)].filter(Boolean).join(" · ");
+
+function highlight(text, issues) {
+  // Find each issue span (case-insensitive), wrap it; skip overlaps.
+  const ranges = [];
+  for (const i of issues) {
+    const at = text.toLowerCase().indexOf(i.original.toLowerCase());
+    if (at >= 0 && !ranges.some((r) => at < r.end && at + i.original.length > r.start)) ranges.push({ start: at, end: at + i.original.length, type: i.type });
+  }
+  ranges.sort((a, b) => a.start - b.start);
+  let out = "", pos = 0;
+  for (const r of ranges) { out += esc(text.slice(pos, r.start)) + `<mark class="${r.type}">${esc(text.slice(r.start, r.end))}</mark>`; pos = r.end; }
+  return out + esc(text.slice(pos));
+}
+
+function card(f) {
+  const issues = f.issues.map((i) => `
+    <div class="issue">
+      <span class="badge ${i.type}">${i.type}</span>
+      <span class="fix"><s>${esc(i.original)}</s> → <b>${esc(i.suggestion)}</b></span>
+      <span class="why">${esc(i.explanation)}</span>
+    </div>`).join("");
+  const natural = f.natural_version ? `<div class="natural"><span>${esc(f.natural_version)}</span><button class="ghost" data-copy="${f.id}">Copy</button></div>` : "";
+  return `<div class="card"><button class="ghost close" title="Dismiss" data-dismiss="${f.id}">✕</button>
+    <p class="original">${highlight(f.original, f.issues)}</p>${issues}${natural}<div class="meta">${meta(f)}</div></div>`;
+}
+
+function render() {
+  const fresh = items.filter((f) => !f.dismissed);
+  $("cards").innerHTML = fresh.length ? fresh.map(card).join("") : `<div class="empty">Nothing to fix. Keep talking.</div>`;
+  const old = items.filter((f) => f.dismissed);
+  $("histCount").textContent = old.length;
+  $("history").innerHTML = old.length ? "" : `<div class="empty">Dismissed feedback shows here.</div>`;
+  $("history").innerHTML += old.map((f) => `<div class="hist"><div>${f.issues.map((i) => `<s>${esc(i.original)}</s> → <b>${esc(i.suggestion)}</b>`).join(" · ")}<small>${esc(f.original)}</small><small>${meta(f)}</small></div><button class="ghost" data-delete="${f.id}" title="Delete">✕</button></div>`).join("");
+}
+
+function renderPatterns(list) {
+  $("patternsBox").hidden = !list.length;
+  $("patterns").innerHTML = list.map((p) => `<div class="pattern"><span><span class="badge ${p.type}">${p.type}</span> ${esc(p.pattern)}<br><small>last: “${esc(p.example)}” → “${esc(p.suggestion)}”</small></span><small>${p.count}×</small></div>`).join("");
+}
+
+function setStatus(s, isPaused) {
+  paused = isPaused;
+  $("pause").textContent = paused ? "Resume" : "Pause";
+  $("status").textContent = paused ? "paused" : s;
+  $("dot").className = "dot " + (paused ? "off" : s === "analyzing" ? "busy" : (s.startsWith("error") || s.startsWith("disconnected")) ? "err" : "");
+}
+
+const api = (path, method = "POST", body) => fetch(path, { method, headers: { "Content-Type": "application/json" }, body: body && JSON.stringify(body) });
+
+document.addEventListener("click", async (e) => {
+  const t = e.target.closest("button"); if (!t) return;
+  if (t.dataset.dismiss) { await api(`/api/feedback/${t.dataset.dismiss}/dismiss`); items.find((f) => f.id == t.dataset.dismiss).dismissed = 1; render(); }
+  if (t.dataset.delete) { await api(`/api/feedback/${t.dataset.delete}`, "DELETE"); items = items.filter((f) => f.id != t.dataset.delete); render(); }
+  if (t.dataset.example !== undefined) { await api("/api/analyze", "POST", { text: t.textContent }); }
+  if (t.dataset.replay) { await api("/api/handy/replay", "POST", { id: +t.dataset.replay }); t.textContent = "Sent"; }
+  if (t.dataset.handytest !== undefined) { const r = await api("/api/handy/test", "POST"); t.textContent = r.ok ? "Sent — wait 1–3 s" : "Failed"; }
+  if (t.dataset.model) { await api("/api/model", "POST", { model: t.dataset.model }); model = t.dataset.model; renderEngine(); }
+  if (t.dataset.copy) { await navigator.clipboard.writeText(items.find((f) => f.id == t.dataset.copy).natural_version); t.textContent = "Copied"; }
+});
+$("pause").onclick = async () => { const r = await (await api("/api/pause", "POST", { paused: !paused })).json(); setStatus("idle", r.paused); };
+function renderEngine() {
+  const pills = (list) => list.map((m) => `<button class="pill${m === model ? " on" : ""}" data-model="${esc(m)}">${esc(short(m))}</button>`).join("");
+  const card = (cls, title, note, list) => `<div class="group ${cls}${list.includes(model) ? " active" : ""}">
+    <div class="head"><b>${title}</b>${list.includes(model) ? '<span class="badge">In use</span>' : ""}</div>
+    <p class="note">${note}</p><div class="pills">${list.length ? pills(list) : '<small class="note">No models found</small>'}</div></div>`;
+  $("engine").innerHTML = card("local", "💻 Local · this Mac", "Ollama. Your text never leaves this Mac.", models.filter((m) => !isCloud(m)))
+    + card("cloud", "☁ Cloud", "Vercel AI Gateway. Your text is sent to the model provider.", models.filter(isCloud));
+}
+$("clear").onclick = async () => { await api("/api/feedback", "DELETE"); items = []; render(); renderPatterns([]); };
+$("try").onsubmit = async (e) => { e.preventDefault(); const text = $("tryText").value.trim(); if (!text) return; try { await api("/api/analyze", "POST", { text }); $("tryText").value = ""; } catch { setStatus("disconnected — server not running", false); } };
+document.addEventListener("keydown", (e) => { // Esc dismisses the newest card
+  if (e.key === "Escape" && document.activeElement.tagName !== "INPUT") document.querySelector("[data-dismiss]")?.click();
+});
+
+(async () => {
+  const s = await (await fetch("/api/state")).json();
+  items = s.feedback;
+  models = s.models; model = s.model; renderEngine();
+  setStatus(s.status, s.paused); render(); renderPatterns(s.patterns);
+  const recent = await (await fetch("/api/handy/recent")).json();
+  $("replay").innerHTML = recent.length ? recent.map((r) => `<div class="hist"><div>${esc(r.text)}</div><button data-replay="${r.id}">▶ Replay</button></div>`).join("") : `<div class="hist"><div><small>No Handy dictations found.</small></div></div>`;
+  const ev = new EventSource("/events");
+  ev.addEventListener("feedback", (m) => { items.unshift(JSON.parse(m.data)); render(); });
+  ev.addEventListener("patterns", (m) => renderPatterns(JSON.parse(m.data)));
+  ev.addEventListener("status", (m) => { const d = JSON.parse(m.data); setStatus(d.status, d.paused); });
+  ev.addEventListener("clean", (m) => { const d = JSON.parse(m.data); if (d.source === "manual" || d.source?.startsWith("handy:")) { $("status").textContent = d.skipped ? `skipped: ${d.skipped}` : `looks good ✓ (${short(d.model)}, ${(d.ms / 1000).toFixed(1)} s)`; } });
+  ev.onerror = () => setStatus("disconnected", false);
+})();
+</script>
+</body>
+</html>
